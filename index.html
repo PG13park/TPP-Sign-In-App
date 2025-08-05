@@ -24,13 +24,13 @@
 </head>
 <body>
   <h2>Sign In</h2>
-  <p>Enter your email to sign in:</p>
+  <p>Enter your school email to sign in to the current TPP Event:</p>
   <input type="email" id="email" placeholder="your@email.com" />
   <button onclick="signIn()">Sign In</button>
   <div id="message"></div>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwK7vD3nhbr6NZ1XhHieDr9xHzPrUpVGJRVDQBOOMPqLgfzBk0XY0pU0hpMLCv7u95A/exec'; // Replace with your Apps Script URL
+    const scriptURL = 'https://script.google.com/a/macros/umsystem.edu/s/AKfycbxa96mZEM9ePcG2-waE6wbDslKIdOJtRz6L-fppd0heNLVR-4XsjHGb8Cl4wu9fpLIp/exec'; // Replace with your Apps Script URL
     const waiverURL = 'https://docs.google.com/forms/d/e/1FAIpQLScZgFTaauzNX1ocMMl-sU5tHdxm2j4zUaBqJYROF28eXt0UtQ/viewform?usp=dialog';
 
     async function signIn() {
@@ -55,7 +55,7 @@
         const data = await res.json();
 
         if (data.found) {
-          messageDiv.textContent = '✅ You have successfully signed in!';
+          messageDiv.textContent = '✅ You have successfully signed in!<br>Show this message to the Sign In Manager then you are good to go.';
         } else {
           messageDiv.innerHTML = `❌ Email not found. Please <a href="${waiverURL}" target="_blank">sign up through the One Time Waiver</a>.`;
         }
