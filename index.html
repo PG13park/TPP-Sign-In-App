@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign In</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2em;
+      max-width: 400px;
+      margin: auto;
+    }
+    input, button {
+      width: 100%;
+      padding: 0.7em;
+      margin-top: 1em;
+    }
+    #message {
+      margin-top: 2em;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>Sign In</h2>
+  <p>Enter your email to sign in:</p>
+  <input type="email" id="email" placeholder="your@email.com" />
+  <button onclick="signIn()">Sign In</button>
+  <div id="message"></div>
+
+  <script>
+    const scriptURL = 'YOUR_WEB_APP_URL_HERE'; // Replace with your Apps Script URL
+    const waiverURL = 'YOUR_GOOGLE_FORM_LINK_HERE';
+
+    async function signIn() {
+      const email = document.getElementById('email').value.trim();
+      const messageDiv = document.getElementById('message');
+      messageDiv.textContent = 'Checking...';
+
+      if (!email) {
+        messageDiv.textContent = 'Please enter an email.';
+        return;
+      }
+
+      try {
+        const formData = new URLSearchParams();
+        formData.append('email', email);
+
+        const res = await fetch(scriptURL, {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await res.json();
+
+        if (data.found) {
+          messageDiv.textContent = '✅ You have successfully signed in!';
+        } else {
+          messageDiv.innerHTML = `❌ Email not found. Please <a href="${waiverURL}" target="_blank">sign up through the One Time Waiver</a>.`;
+        }
+      } catch (err) {
+        console.error(err);
+        messageDiv.textContent = 'There was an error signing in.';
+      }
+    }
+  </script>
+</body>
+</html>
