@@ -36,12 +36,19 @@
     const waiverURL = 'https://docs.google.com/forms/d/e/1FAIpQLScZgFTaauzNX1ocMMl-sU5tHdxm2j4zUaBqJYROF28eXt0UtQ/viewform?usp=dialog';
 
     async function signIn() {
-      const email = document.getElementById("email").value;
+      const email = document.getElementById("email").value.trim();
+      const messageDiv = document.getElementById("message");
+      messageDiv.textContent = "Signing in...";
+    
+      if (!email) {
+        messageDiv.textContent = "Please enter an email.";
+        return;
+      }
     
       try {
         const response = await fetch('https://script.google.com/macros/s/AKfycbzocK5SNDuumiEHgFJfdf_CIPzl5yYc7EPARUJxgThZurFbG5US3OD90WmjLIQsjXX1/exec', {
-          redirect: "follow",
           method: "POST",
+          redirect: "follow",
           headers: {
             "Content-Type": "text/plain;charset=utf-8"
           },
@@ -49,13 +56,15 @@
         });
     
         const result = await response.json();
-        console.log("Success:", result);
     
-        // Optional: Show feedback on the page
-        document.getElementById("status").textContent = `Welcome, ${result.email}`;
+        if (result.status === "success") {
+          messageDiv.textContent = `Welcome, ${result.email}`;
+        } else {
+          messageDiv.textContent = `Error: ${result.message}`;
+        }
       } catch (error) {
         console.error("Fetch error:", error);
-        document.getElementById("status").textContent = "There was an error signing in.";
+        messageDiv.textContent = "There was an error signing in.";
       }
     }
   </script>
