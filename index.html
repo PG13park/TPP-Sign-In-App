@@ -37,38 +37,26 @@
       const email = document.getElementById('email').value.trim();
       const messageDiv = document.getElementById('message');
       messageDiv.textContent = 'Checking...';
-
+  
       if (!email) {
         messageDiv.textContent = 'Please enter an email.';
         return;
       }
-
+  
       try {
-        const formData = new URLSearchParams();
-        formData.append('email', email);
-
-        try {
-          const res = await fetch(scriptURL, {
-            method: 'POST',
-            body: formData
-          });
-        
-          const text = await res.text(); // raw response
-          console.log('Raw response:', text);
-        
-          const data = JSON.parse(text);
-        
-          if (data.found) {
-            messageDiv.textContent = '✅ You have successfully signed in!';
-          } else {
-            messageDiv.innerHTML = `❌ Email not found. Please <a href="${waiverURL}" target="_blank">sign up through the One Time Waiver</a>.`;
-          }
-        } catch (err) {
-          console.error('Fetch error:', err);
-          messageDiv.textContent = 'There was an error signing in.';
+        const res = await fetch(`${scriptURL}?email=${encodeURIComponent(email)}`);
+        const text = await res.text();
+        console.log('Raw response:', text);
+  
+        const data = JSON.parse(text);
+  
+        if (data.found) {
+          messageDiv.textContent = '✅ You have successfully signed in!<br>Show this message to the sign up manager then your good to go!';
+        } else {
+          messageDiv.innerHTML = `❌ Email not found. Please <a href="${waiverURL}" target="_blank">sign up through the One Time Waiver</a>.`;
         }
       } catch (err) {
-        console.error(err);
+        console.error('Fetch error:', err);
         messageDiv.textContent = 'There was an error signing in.';
       }
     }
