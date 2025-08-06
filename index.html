@@ -30,34 +30,24 @@
   <div id="message"></div>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbywXzOe1aKRiddcTSvFxRh37sZihHRgmOnK8a6dDHpMym1xgBZMO5b8vuI9zNc-rEol/exec'; // Replace with your Apps Script URL
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzkovGQyv6JAgNtCK3aHiVoNUmIxYAeprt8IRYOxByjRjGMKjlvi1u2C6nSPXLOSknW/exec'; // Replace with your Apps Script URL
     const waiverURL = 'https://docs.google.com/forms/d/e/1FAIpQLScZgFTaauzNX1ocMMl-sU5tHdxm2j4zUaBqJYROF28eXt0UtQ/viewform?usp=dialog';
 
     async function signIn() {
-      const email = document.getElementById('email').value.trim();
-      const messageDiv = document.getElementById('message');
-      messageDiv.textContent = 'Checking...';
-  
-      if (!email) {
-        messageDiv.textContent = 'Please enter an email.';
-        return;
-      }
-  
+      const url = 'https://script.google.com/macros/s/AKfycbzkovGQyv6JAgNtCK3aHiVoNUmIxYAeprt8IRYOxByjRjGMKjlvi1u2C6nSPXLOSknW/exec?email=cgf6m@umsystem.edu';
+    
       try {
-        const res = await fetch(`${scriptURL}?email=${encodeURIComponent(email)}`);
-        const text = await res.text();
-        console.log('Raw response:', text);
-  
-        const data = JSON.parse(text);
-  
-        if (data.found) {
-          messageDiv.textContent = '✅ You have successfully signed in!<br>Show this message to the sign up manager then your good to go!';
+        const response = await fetch(url);
+        const result = await response.json();
+    
+        if (result.success) {
+          alert('Signed in!');
         } else {
-          messageDiv.innerHTML = `❌ Email not found. Please <a href="${waiverURL}" target="_blank">sign up through the One Time Waiver</a>.`;
+          alert('Error: ' + result.message);
         }
-      } catch (err) {
-        console.error('Fetch error:', err);
-        messageDiv.textContent = 'There was an error signing in.';
+      } catch (error) {
+        console.error("Fetch error:", error);
+        alert('There was an error signing in.');
       }
     }
   </script>
