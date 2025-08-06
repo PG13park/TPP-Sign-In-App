@@ -30,25 +30,32 @@
   <div id="message"></div>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzwnWqDljIXcEePuB3pYPSzuReTq0Lj_pOOSDFRgk8uHmYkM-XO5hvLfueT4JkcML4y/exec'; // Replace with your Apps Script URL
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzocK5SNDuumiEHgFJfdf_CIPzl5yYc7EPARUJxgThZurFbG5US3OD90WmjLIQsjXX1/exec'; // Replace with your Apps Script URL
     const waiverURL = 'https://docs.google.com/forms/d/e/1FAIpQLScZgFTaauzNX1ocMMl-sU5tHdxm2j4zUaBqJYROF28eXt0UtQ/viewform?usp=dialog';
 
-    async function signIn() {
-      const url = 'https://script.google.com/macros/s/AKfycbzwnWqDljIXcEePuB3pYPSzuReTq0Lj_pOOSDFRgk8uHmYkM-XO5hvLfueT4JkcML4y/exec?email=cgf6m@umsystem.edu';
+    function signIn() {
+      const email = "cgf6m@umsystem.edu"; // Get from form if needed
+      const url = "https://script.google.com/macros/s/AKfycbzocK5SNDuumiEHgFJfdf_CIPzl5yYc7EPARUJxgThZurFbG5US3OD90WmjLIQsjXX1/exec"; // use correct URL
     
-      try {
-        const response = await fetch(url);
-        const result = await response.json();
+      const data = { email: email };
     
-        if (result.success) {
-          alert('Signed in!');
-        } else {
-          alert('Error: ' + result.message);
-        }
-      } catch (error) {
+      fetch(url, {
+        method: "POST",
+        redirect: "follow", // important
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8" // this helps with CORS
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(result => {
+        console.log("Success:", result);
+        alert("Signed in: " + result.email);
+      })
+      .catch(error => {
         console.error("Fetch error:", error);
-        alert('There was an error signing in.');
-      }
+        alert("There was a problem signing in.");
+      });
     }
   </script>
 </body>
